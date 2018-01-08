@@ -5,6 +5,8 @@ VisualStudioVersion = 15.0.26403.7
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CouchBaseHelloWorld", "CouchBaseHelloWorld\CouchBaseHelloWorld.csproj", "{597A7093-AE60-4FEC-8054-AC2CA588133D}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CouchBaseHelloWorldGUI", "CouchBaseHelloWorldGUI\CouchBaseHelloWorldGUI.csproj", "{D8D4F9C0-44AF-440D-BD23-E918BDB7947A}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -15,6 +17,10 @@ Global
 		{597A7093-AE60-4FEC-8054-AC2CA588133D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{597A7093-AE60-4FEC-8054-AC2CA588133D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{597A7093-AE60-4FEC-8054-AC2CA588133D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D8D4F9C0-44AF-440D-BD23-E918BDB7947A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D8D4F9C0-44AF-440D-BD23-E918BDB7947A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D8D4F9C0-44AF-440D-BD23-E918BDB7947A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D8D4F9C0-44AF-440D-BD23-E918BDB7947A}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

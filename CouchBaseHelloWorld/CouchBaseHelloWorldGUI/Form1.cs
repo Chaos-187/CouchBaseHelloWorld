@@ -1,20 +1,34 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
+using System.Data;
+using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Forms;
 using Couchbase;
 using Couchbase.Configuration.Client;
 using Couchbase.Authentication;
 
-namespace CouchBaseHelloWorld
-{
-    class Program
-    {
-        static void Main(string[] args)
-        {
 
-            var cluster = new Cluster(new ClientConfiguration
+namespace CouchBaseHelloWorldGUI
+{
+    public partial class Form1 : Form
+    {
+        Cluster cluster;
+
+        public Form1()
+        {
+            InitializeComponent();
+
+        }
+
+
+
+        private void Form1_Load(object sender, EventArgs e)
+        {
+            cluster = new Cluster(new ClientConfiguration
             {
                 Servers = new List<Uri> { new Uri("http://127.0.0.1:8091") }
             });
@@ -22,12 +36,15 @@ namespace CouchBaseHelloWorld
             var authenticator = new PasswordAuthenticator("Administrator", "password");
             cluster.Authenticate(authenticator);
 
+        }
 
+        private void button1_Click(object sender, EventArgs e)
+        {
             using (var bucket = cluster.OpenBucket("TestBucket"))
             {
                 var document = new Document<dynamic>
                 {
-                    Id = "1",
+                    Id = textBox1.Text,
                     Content = new
                     {
                         name = "Couchbase",
@@ -40,17 +57,20 @@ namespace CouchBaseHelloWorld
                 var upsert = bucket.Upsert(document);
                 if (upsert.Success)
                 {
-                    var get = bucket.GetDocument<dynamic>(document.Id);
-                    document = get.Document;
-                    var msg = string.Format("{0} {1}!", document.Id, document.Content.name);
-                    Console.WriteLine(msg);
+                    MessageBox.Show("YAY");
                 }
-                Console.Read();
             }
+        }
 
-
-
-
+        private void button2_Click(object sender, EventArgs e)
+        {
+            using (var bucket = cluster.OpenBucket("TestBucket"))
+            {
+                var get = bucket.GetDocument<dynamic>(textBox1.Text);
+                var document = get.Document;
+                var msg = string.Format("{0} {1} {2}!", document.Id, document.Content.name ,document.Content.magic);
+                MessageBox.Show(msg);
+            }
         }
     }
 }
