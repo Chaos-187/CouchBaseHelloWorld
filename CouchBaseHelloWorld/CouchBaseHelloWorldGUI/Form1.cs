@@ -10,6 +10,7 @@ using System.Windows.Forms;
 using Couchbase;
 using Couchbase.Configuration.Client;
 using Couchbase.Authentication;
+using Newtonsoft.Json;
 
 
 namespace CouchBaseHelloWorldGUI
@@ -33,7 +34,7 @@ namespace CouchBaseHelloWorldGUI
                 Servers = new List<Uri> { new Uri("http://127.0.0.1:8091") }
             });
 
-            var authenticator = new PasswordAuthenticator("Administrator", "password");
+            var authenticator = new PasswordAuthenticator("<USERNAME>", "<PASSWORD>");
             cluster.Authenticate(authenticator);
 
         }
@@ -42,16 +43,26 @@ namespace CouchBaseHelloWorldGUI
         {
             using (var bucket = cluster.OpenBucket("TestBucket"))
             {
-                var document = new Document<dynamic>
+                var numbers = new numbers()
+                {
+                    one = 1,
+                    two = 2
+                };
+
+                var couchitem = new couchitem()
+                {
+
+                    name = "KYLE",
+                    color = System.Drawing.Color.Red,
+                    magic = "test",
+                    test = numbers
+
+                };
+
+                var document = new Document<couchitem>
                 {
                     Id = textBox1.Text,
-                    Content = new
-                    {
-                        name = "Couchbase",
-                        color = "Red",
-                        magic = "works",
-                        test = "yay"
-                    }
+                    Content = couchitem
                 };
 
                 var upsert = bucket.Upsert(document);
@@ -66,10 +77,35 @@ namespace CouchBaseHelloWorldGUI
         {
             using (var bucket = cluster.OpenBucket("TestBucket"))
             {
+
                 var get = bucket.GetDocument<dynamic>(textBox1.Text);
                 var document = get.Document;
-                var msg = string.Format("{0} {1} {2}!", document.Id, document.Content.name ,document.Content.magic);
-                MessageBox.Show(msg);
+
+                foreach (PropertyDescriptor property in TypeDescriptor.GetProperties(document.Content))
+                {
+                    if (property.GetValue(document.Content) is Newtonsoft.Json.Linq.JArray)
+                    {
+                        textBox2.Text += String.Format("{0} : {1}", property.Name, Environment.NewLine);
+                        foreach (var item in property.GetValue(document.Content) as Newtonsoft.Json.Linq.JArray)
+                        {
+                            foreach (PropertyDescriptor property2 in TypeDescriptor.GetProperties(item))
+                            {
+                               
+                                textBox2.Text += String.Format("         {0} : {1}{2}", property2.Name, Convert.ToString(property2.GetValue(item)), Environment.NewLine);
+                            }
+                        }
+                    }
+                    else
+                    {
+                        textBox2.Text += String.Format("{0} : {1}{2}", property.Name, Convert.ToString(property.GetValue(document.Content)), Environment.NewLine);
+                    }
+
+
+                }
+
+
+                //var msg = string.Format("{0} {1} {2} {3}!", document.Id, document.Content.name ,document.Content.magic, document.Content.color);
+                // MessageBox.Show(msg);
             }
         }
     }
